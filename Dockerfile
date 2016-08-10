@@ -84,23 +84,36 @@ RUN apt-get update -y && \
 RUN curl -L http://cpanmin.us | perl - App::cpanminus
 
 RUN cpanm \
-        MD5 \
-        CHI \
-        Beanstalk::Client \
-        AWS::S3 \
-        Sort::Maker \
-        Captcha::reCAPTCHA::V2 \
-        Net::Amazon::S3::Policy \
-        Digest::SHA1 \
-        CGI::Upload
+    MD5 \
+    CHI \
+    Beanstalk::Client \
+    AWS::S3 \
+    Sort::Maker \
+    Captcha::reCAPTCHA::V2 \
+    Net::Amazon::S3::Policy \
+    Digest::SHA1 \
+    CGI::Upload
         
+#The order of these matter, as Ouch won't successfully test witout Test::Trap
+RUN cpanm \
+    Test::Trap \
+    Ouch
+
+#Facebook at least requires Ouch module to be installed. Make sure these stay correctly ordered.
+RUN cpanm \
+    Facebook::Graph \
+    Net::Twitter::Lite \
+    CGI::FileManager
+
+#I can't get these to install with testing on.
+#Net::AWS::SES fails on 1 test of 25, for reasons I can't quite figure out
+#Forecast::IO expects to be installed interactively and hangs waiting for an API key to be entered
 RUN cpanm --notest \
-        CGI::FileManager \
-        Net::AWS::SES \
-        Forecast::IO
+    Net::AWS::SES \
+    Forecast::IO
 
 RUN rm -rf /var/lib/apt/lists/*
 
 RUN rm -rf $HOME/.cpan* \
-       /tmp/cpan_install_*.txt
+    /tmp/cpan_install_*.txt
 
