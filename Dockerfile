@@ -78,6 +78,7 @@ RUN apt-get update -y && \
     libcgi-application-perl \
     libcgi-application-plugin-session-perl \
     libextutils-cbuilder-perl \
+    libcrypt-blowfish-perl \
     liblib-abs-perl \
     curl
 
