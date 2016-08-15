@@ -42,7 +42,6 @@ RUN apt-get update -y && \
     liblog-dispatch-perl \
     libmime-base64-urlsafe-perl \
     libtext-csv-perl \
-    libmongodb-perl \
     libdatetime-format-mysql-perl \
     libmail-rfc822-address-perl \
     libdatetime-format-flexible-perl \
@@ -82,6 +81,8 @@ RUN apt-get update -y && \
     liblib-abs-perl \
     curl
 
+#removed libmongodb-perl 2016-08-16. Need older version v0.708.0.0.
+    -
 RUN curl -L http://cpanmin.us | perl - App::cpanminus
 
 RUN cpanm \
@@ -112,6 +113,8 @@ RUN cpanm \
 RUN cpanm --notest \
     Net::AWS::SES \
     Forecast::IO
+
+ADD perl_modules/MongoDB-v0.708.0.0.tar.gz ~
 
 RUN rm -rf /var/lib/apt/lists/*
 
