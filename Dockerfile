@@ -1,6 +1,6 @@
 FROM ubuntu:16.04
 
-MAINTAINER Eugene O'Brien <e.obrien@sportstg.com>
+MAINTAINER "Eugene O'Brien <e.obrien@sportstg.com>"
 
 RUN apt-get update -y && \
     DEBIAN_FRONTEND=noninteractive \
@@ -82,7 +82,7 @@ RUN apt-get update -y && \
     curl
 
 #removed libmongodb-perl 2016-08-16. Need older version v0.708.0.0.
-    -
+
 RUN curl -L http://cpanmin.us | perl - App::cpanminus
 
 RUN cpanm \
@@ -114,7 +114,23 @@ RUN cpanm --notest \
     Net::AWS::SES \
     Forecast::IO
 
-ADD perl_modules/MongoDB-v0.708.0.0.tar.gz ~
+#These are all dependencies of MongoDB
+RUN cpanm \
+    Config::AutoConf \
+    Throwable \
+    Safe::Isa \
+    Authen::SCRAM::Client \
+    DateTime::Tiny \
+    Crypt::URandom \
+    boolean \
+    Syntax::Keyword::Junction \
+    syntax
+
+ADD perl_modules/MongoDB-v0.708.0.0.tar.gz /root/
+
+RUN cd /root/MongoDB-v0.708.0.0 && \
+    cpanm . && \
+    rm -rf /root/MongoDB-v0.708.0.0
 
 RUN rm -rf /var/lib/apt/lists/*
 
