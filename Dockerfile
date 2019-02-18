@@ -1,4 +1,4 @@
-FROM ubuntu:16.04
+FROM ubuntu:18.04
 
 MAINTAINER "Eugene O'Brien <e.obrien@sportstg.com>"
 
@@ -103,7 +103,6 @@ RUN cpanm \
 
 #Facebook at least requires Ouch module to be installed. Make sure these stay correctly ordered.
 RUN cpanm \
-    Facebook::Graph \
     Net::Twitter::Lite \
     CGI::FileManager
 
@@ -112,7 +111,8 @@ RUN cpanm \
 #Forecast::IO expects to be installed interactively and hangs waiting for an API key to be entered
 RUN cpanm --notest \
     Net::AWS::SES \
-    Forecast::IO
+    Forecast::IO \
+    Facebook::Graph
 
 #These are all dependencies of MongoDB
 RUN cpanm \
@@ -137,3 +137,4 @@ RUN rm -rf /var/lib/apt/lists/*
 RUN rm -rf $HOME/.cpan* \
     /tmp/cpan_install_*.txt
 
+RUN ln -sf /usr/share/zoneinfo/Australia/Melbourne /etc/localtime
